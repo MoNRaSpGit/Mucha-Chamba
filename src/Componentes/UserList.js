@@ -15,6 +15,7 @@ const UserList = () => {
         { id: 8, name: 'Sofia', profession: 'Carpintero', available: false, age: 27, experience: '+7 años' },
         { id: 9, name: 'Ricardo', profession: 'Mecánico', available: true, age: 38, experience: '+15 años' },
         { id: 10, name: 'Elena', profession: 'Mecánica', available: false, age: 29, experience: '+6 años' },
+        { id: 11, name: 'Patricia', profession: 'Peluquera', available: true, age: 30, experience: '+12 años' },
     ];
 
     const handleSelectRecommended = (rec) => {
