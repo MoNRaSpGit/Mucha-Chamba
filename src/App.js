@@ -5,7 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 const App = () => {
   return (
     <div>
-      <h1 className="text-center mt-4">Mucha Chamba</h1>
+      <h1 className="text-center mt-4">Chamba YA!!!!</h1>
       <UserList />
     </div>
   );
