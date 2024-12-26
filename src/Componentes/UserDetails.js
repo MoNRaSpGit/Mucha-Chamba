@@ -1,22 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import "../Css/tarjetas.css";
+import CardPaymentForm from "./CardPaymentForm"; // Componente para el formulario de tarjeta
 
 const UserDetails = ({ user, onClose, recommendations, onSelectRecommended }) => {
   const [serviceRequested, setServiceRequested] = useState(false);
-  const [requestSuccessful, setRequestSuccessful] = useState(false); // Nuevo estado
+  const [requestSuccessful, setRequestSuccessful] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState(null); // Método de pago seleccionado
+  const [showPaymentOptions, setShowPaymentOptions] = useState(false); // Mostrar botones de pago
 
   const professionIcons = {
-    Plomero: '🔧',
-    Albañil: '🏗️',
-    Peluquera: '✂️',
-    Electricista: '💡',
-    Pintora: '🎨',
-    Jardinero: '🌳',
-    Cocinera: '🍳',
-    Carpintero: '🔨',
-    Costurera: '🧵',
-    Mecánico: '🔧',
-    Masajista: '💆‍♂️',
+    Plomero: "🔧",
+    Albañil: "🏗️",
+    Peluquera: "✂️",
+    Electricista: "💡",
+    Pintora: "🎨",
+    Jardinero: "🌳",
+    Cocinera: "🍳",
+    Carpintero: "🔨",
+    Costurera: "🧵",
+    Mecánico: "🔧",
+    Masajista: "💆‍♂️",
   };
 
   const professionIcon = Object.keys(professionIcons).find((key) =>
@@ -30,26 +33,46 @@ const UserDetails = ({ user, onClose, recommendations, onSelectRecommended }) =>
 
   const handleRequestService = () => {
     if (!user.available) {
-      setServiceRequested(true);
+      setServiceRequested(true); // Si no está disponible, activar sugerencias
     } else {
-      // Mostrar mensaje de éxito
-      setRequestSuccessful(true);
-      setTimeout(() => {
-        onClose(); // Cerrar tarjeta automáticamente después de unos segundos
-      }, 3000); // 3 segundos
+      setShowPaymentOptions(true); // Mostrar opciones de pago si está disponible
     }
+  };
+
+  const handlePaymentMethod = (method) => {
+    setPaymentMethod(method);
+
+    if (method === "efectivo") {
+      setRequestSuccessful(true); // Mostrar el mensaje de éxito
+
+      // Cerrar el mensaje automáticamente después de 3 segundos
+      setTimeout(() => {
+        setRequestSuccessful(false);
+        onClose(); // Cerrar el componente
+      }, 3000);
+    }
+  };
+
+  const handlePaymentSuccess = () => {
+    setRequestSuccessful(true); // Mostrar el mensaje de éxito
+
+    // Cerrar el mensaje automáticamente después de 3 segundos
+    setTimeout(() => {
+      setRequestSuccessful(false);
+      onClose(); // Cerrar el componente
+    }, 3000);
   };
 
   return (
     <div className="user-details-card card mt-3 p-4 shadow">
-      {/* Mostrar mensaje de éxito si la solicitud fue exitosa */}
       {requestSuccessful ? (
         <div className="text-center">
           <h4 className="text-success">¡Solicitud exitosa! 🎉</h4>
           <p>
             Su <strong>{user.profession}</strong> {user.name} llegará a{" "}
             <strong>{address}</strong> en aproximadamente{" "}
-            <strong>{estimatedTime} minutos</strong>. ¡Gracias por confiar en nosotros!
+            <strong>{estimatedTime} minutos</strong>. ¡Gracias por confiar en
+            nosotros!
           </p>
         </div>
       ) : serviceRequested && !user.available ? (
@@ -63,7 +86,6 @@ const UserDetails = ({ user, onClose, recommendations, onSelectRecommended }) =>
               <div className="col-12 col-md-6 mb-3" key={rec.id}>
                 <div className="card p-3 shadow-sm">
                   <div className="d-flex align-items-center">
-                    {/* Avatar */}
                     <div
                       style={{
                         width: "50px",
@@ -79,11 +101,9 @@ const UserDetails = ({ user, onClose, recommendations, onSelectRecommended }) =>
                     >
                       {rec.name[0]}
                     </div>
-                    {/* Información del trabajador */}
                     <div>
                       <h6 className="mb-0">{rec.name}</h6>
                       <p className="text-muted mb-0">{rec.profession}</p>
-                      {/* Indicador de disponibilidad */}
                       <span
                         className={`badge ${
                           rec.available ? "bg-success" : "bg-danger"
@@ -93,10 +113,14 @@ const UserDetails = ({ user, onClose, recommendations, onSelectRecommended }) =>
                       </span>
                     </div>
                   </div>
-                  {/* Botón para seleccionar */}
                   <button
                     className="btn btn-primary mt-2 w-100"
-                    onClick={() => onSelectRecommended(rec)}
+                    onClick={() => {
+                      onSelectRecommended(rec); // Actualizar selección
+                      setShowPaymentOptions(false); // Restablecer estado
+                      setPaymentMethod(null); // Limpiar método de pago
+                      setServiceRequested(false); // Reiniciar sugerencias
+                    }}
                   >
                     Ver detalles
                   </button>
@@ -110,10 +134,8 @@ const UserDetails = ({ user, onClose, recommendations, onSelectRecommended }) =>
         </div>
       ) : (
         <>
-          {/* Botón de cierre */}
           <button className="btn-close align-self-end" onClick={onClose}></button>
 
-          {/* Avatar y nombre */}
           <div className="d-flex align-items-center mb-3">
             <div
               style={{
@@ -132,11 +154,20 @@ const UserDetails = ({ user, onClose, recommendations, onSelectRecommended }) =>
             </div>
             <div>
               <h4 className="card-title mb-0">{user.name}</h4>
-              <p className="text-muted mb-0">{professionIcon} {user.profession}</p>
+              <p className="text-muted mb-0">
+                {professionIcon} {user.profession}
+              </p>
+              {/* Mostrar disponibilidad */}
+              <span
+                className={`badge ${
+                  user.available ? "bg-success" : "bg-danger"
+                } mt-2`}
+              >
+                {user.available ? "Disponible" : "No disponible"}
+              </span>
             </div>
           </div>
 
-          {/* Detalles del usuario */}
           <p>
             <strong>Edad:</strong> {user.age} años
           </p>
@@ -150,16 +181,44 @@ const UserDetails = ({ user, onClose, recommendations, onSelectRecommended }) =>
             <strong>Dirección:</strong> {address}
           </p>
 
-          {/* Botones */}
-          <div className="d-flex gap-2 mt-4">
-            <button
-              className="btn btn-primary flex-grow-1"
-              onClick={handleRequestService}
-            >
-              Solicitar servicio
-            </button>
-            <button className="btn btn-secondary flex-grow-1" onClick={onClose}>
-              Cerrar
+          {!showPaymentOptions && !serviceRequested && (
+            <div className="mt-4">
+              <button
+                className="btn btn-primary w-100"
+                onClick={handleRequestService}
+              >
+                Solicitar servicio
+              </button>
+            </div>
+          )}
+
+          {showPaymentOptions && (
+            <div className="mt-4">
+              <h5 className="text-center">Selecciona el método de pago:</h5>
+              <div className="d-flex justify-content-center gap-3">
+                <button
+                  className="btn btn-outline-primary"
+                  onClick={() => handlePaymentMethod("tarjeta")}
+                >
+                  Tarjeta
+                </button>
+                <button
+                  className="btn btn-outline-primary"
+                  onClick={() => handlePaymentMethod("efectivo")}
+                >
+                  Efectivo
+                </button>
+              </div>
+            </div>
+          )}
+
+          {paymentMethod === "tarjeta" && (
+            <CardPaymentForm onSuccess={handlePaymentSuccess} />
+          )}
+
+          <div className="mt-4">
+            <button className="btn btn-secondary w-100" onClick={onClose}>
+              Cancelar
             </button>
           </div>
         </>

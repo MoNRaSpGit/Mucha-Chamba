@@ -108,7 +108,7 @@ const Login = ({ onAuthenticate }) => {
               transition: "background-color 0.3s ease",
             }}
           >
-            Registrarse e Ingresar
+            Login Automatico
           </button>
         </form>
         <p style={{ marginTop: "15px", fontSize: "14px", color: "green" }}>{message}</p>
