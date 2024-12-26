@@ -20,13 +20,13 @@ const UserItem = ({ id, name, profession, available }) => {
   const professionIcon = (id) => {
     switch (id) {
       case 1:
-        return '🧣'; // Bufanda para el usuario con id 1
+        return '😎'; // Lentes de sol para el usuario con id 1
       case 2:
         return '🍀'; // Hoja verde (trébol) para el usuario con id 2
       case 3:
         return '👋'; // Manitos para el usuario con id 3
       case 4:
-        return '😎'; // Lentes de sol para el usuario con id 4
+        return '🧣'; // Bufanda para el usuario con id 4
       default:
         return Object.keys(professionIcons).find(key => profession.includes(key))
           ? professionIcons[profession.split(' ')[0]]
@@ -36,7 +36,7 @@ const UserItem = ({ id, name, profession, available }) => {
 
   // Condicional para cambiar el texto del estado
   const statusText = (id, available) => {
-    if (id === 4) {
+    if (id === 1) {
       return available ? 'Disponible' : 'Imparable';
     } else {
       return available ? 'Disponible' : 'No Disponible';
@@ -44,8 +44,8 @@ const UserItem = ({ id, name, profession, available }) => {
   };
 
   return (
-    <div className={`card mb-3 shadow-sm ${id === 4 ? 'premium-card' : ''}`}>
-      {id === 4 && (
+    <div className={`card mb-3 shadow-sm ${id === 1 ? 'premium-card' : ''}`}>
+      {id === 1 && (
         <>
           <div className="medals">
             🥇 🥈 🥉 {/* Medallas en la parte superior izquierda */}
