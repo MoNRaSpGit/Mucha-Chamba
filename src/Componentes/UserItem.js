@@ -34,6 +34,15 @@ const UserItem = ({ id, name, profession, available }) => {
     }
   };
 
+  // Condicional para cambiar el texto del estado
+  const statusText = (id, available) => {
+    if (id === 4) {
+      return available ? 'Disponible' : 'Imparable';
+    } else {
+      return available ? 'Disponible' : 'No Disponible';
+    }
+  };
+
   return (
     <div className={`card mb-3 shadow-sm ${id === 4 ? 'premium-card' : ''}`}>
       {id === 4 && (
@@ -77,7 +86,7 @@ const UserItem = ({ id, name, profession, available }) => {
             {professionIcon(id)} {profession}
           </p>
           <span className={`badge ${available ? 'bg-success' : 'bg-danger'}`}>
-            {available ? 'Disponible' : 'No Disponible'}
+            {statusText(id, available)}
           </span>
         </div>
       </div>
