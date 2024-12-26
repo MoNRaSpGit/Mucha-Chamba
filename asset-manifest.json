@@ -1,15 +1,13 @@
 {
   "files": {
-    "main.css": "/Mucha-Chamba/static/css/main.cee1e90c.css",
-    "main.js": "/Mucha-Chamba/static/js/main.d85a459f.js",
-    "static/js/488.8601530e.chunk.js": "/Mucha-Chamba/static/js/488.8601530e.chunk.js",
+    "main.css": "/Mucha-Chamba/static/css/main.62f3970b.css",
+    "main.js": "/Mucha-Chamba/static/js/main.ae271cb5.js",
     "index.html": "/Mucha-Chamba/index.html",
-    "main.cee1e90c.css.map": "/Mucha-Chamba/static/css/main.cee1e90c.css.map",
-    "main.d85a459f.js.map": "/Mucha-Chamba/static/js/main.d85a459f.js.map",
-    "488.8601530e.chunk.js.map": "/Mucha-Chamba/static/js/488.8601530e.chunk.js.map"
+    "main.62f3970b.css.map": "/Mucha-Chamba/static/css/main.62f3970b.css.map",
+    "main.ae271cb5.js.map": "/Mucha-Chamba/static/js/main.ae271cb5.js.map"
   },
   "entrypoints": [
-    "static/css/main.cee1e90c.css",
-    "static/js/main.d85a459f.js"
+    "static/css/main.62f3970b.css",
+    "static/js/main.ae271cb5.js"
   ]
 }
