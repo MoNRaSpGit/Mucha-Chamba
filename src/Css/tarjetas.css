@@ -54,6 +54,44 @@
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
 }
 
+
+/* Estilo del encabezado */
+.header {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+/* Estilo del título */
+.header-title {
+  margin: 0;
+  text-align: center;
+  flex-grow: 1;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+/* Estilo del botón de cierre de sesión */
+.logout-button {
+  background-color: white;
+  color: #007bff;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  position: absolute;
+  right: 20px;
+}
+
+
+
+
+
 @media (max-width: 576px) {
   .user-details-card {
     padding: 15px;
@@ -63,3 +101,5 @@
     font-size: 14px;
   }
 }
+
+

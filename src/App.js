@@ -1,17 +1,47 @@
-import React from 'react';
-import UserList from './Componentes/UserList';
-import 'bootstrap/dist/css/bootstrap.min.css';
-
+import React, { useState, useEffect } from "react";
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import UserList from "./Componentes/UserList";
+import Login from "./Componentes/Login";
 
 const App = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  // Cargar el estado de autenticación desde localStorage
+  useEffect(() => {
+    const authState = localStorage.getItem("isAuthenticated");
+    setIsAuthenticated(authState === "true");
+  }, []);
+
+  // Manejar el cierre de sesión
+  const handleLogout = () => {
+    localStorage.setItem("isAuthenticated", "false");
+    setIsAuthenticated(false);
+  };
+
   return (
-    <div>
-      <h1 className="text-center mt-4">Chamba YA!!!!</h1>
-      <UserList />
+    <Routes>
+      {/* Página de login */}
+      <Route
+        path="/"
+        element={<Login onAuthenticate={() => setIsAuthenticated(true)} />}
+      />
       
-    </div>
+      {/* Página principal (UserList) */}
+      <Route
+        path="/home"
+        element={
+          isAuthenticated ? (
+            <UserList onLogout={handleLogout} />
+          ) : (
+            <Navigate to="/" replace />
+          )
+        }
+      />
+      
+      {/* Redirección para rutas no definidas */}
+      <Route path="*" element={<Navigate to="/" />} />
+    </Routes>
   );
 };
 
 export default App;
-
