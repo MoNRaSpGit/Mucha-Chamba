@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import "../Css/tarjetas.css";
-import CardPaymentForm from "./CardPaymentForm"; // Componente para el formulario de tarjeta
+import CardPaymentForm from "./CardPaymentForm";
 
 const UserDetails = ({ user, onClose, recommendations, onSelectRecommended }) => {
   const [serviceRequested, setServiceRequested] = useState(false);
@@ -31,6 +31,8 @@ const UserDetails = ({ user, onClose, recommendations, onSelectRecommended }) =>
   const estimatedTime = 25; // Tiempo ficticio en minutos
   const address = "Calle Falsa 123"; // Dirección ficticia
 
+  const paymentRef = useRef(null); // Ref para desplazar el scroll al formulario de tarjeta
+
   const handleRequestService = () => {
     if (!user.available) {
       setServiceRequested(true); // Si no está disponible, activar sugerencias
@@ -42,10 +44,12 @@ const UserDetails = ({ user, onClose, recommendations, onSelectRecommended }) =>
   const handlePaymentMethod = (method) => {
     setPaymentMethod(method);
 
-    if (method === "efectivo") {
+    if (method === "tarjeta") {
+      setTimeout(() => {
+        paymentRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 200); // Pequeño retraso para asegurar que el formulario se renderiza antes de desplazar
+    } else if (method === "efectivo") {
       setRequestSuccessful(true); // Mostrar el mensaje de éxito
-
-      // Cerrar el mensaje automáticamente después de 3 segundos
       setTimeout(() => {
         setRequestSuccessful(false);
         onClose(); // Cerrar el componente
@@ -55,8 +59,6 @@ const UserDetails = ({ user, onClose, recommendations, onSelectRecommended }) =>
 
   const handlePaymentSuccess = () => {
     setRequestSuccessful(true); // Mostrar el mensaje de éxito
-
-    // Cerrar el mensaje automáticamente después de 3 segundos
     setTimeout(() => {
       setRequestSuccessful(false);
       onClose(); // Cerrar el componente
@@ -157,7 +159,6 @@ const UserDetails = ({ user, onClose, recommendations, onSelectRecommended }) =>
               <p className="text-muted mb-0">
                 {professionIcon} {user.profession}
               </p>
-              {/* Mostrar disponibilidad */}
               <span
                 className={`badge ${
                   user.available ? "bg-success" : "bg-danger"
@@ -213,7 +214,9 @@ const UserDetails = ({ user, onClose, recommendations, onSelectRecommended }) =>
           )}
 
           {paymentMethod === "tarjeta" && (
-            <CardPaymentForm onSuccess={handlePaymentSuccess} />
+            <div ref={paymentRef}>
+              <CardPaymentForm onSuccess={handlePaymentSuccess} />
+            </div>
           )}
 
           <div className="mt-4">
