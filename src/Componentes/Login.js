@@ -1,135 +1,82 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+const express = require("express");
+const mysql = require("mysql2");
+const cors = require("cors");
 
-const Login = ({ onAuthenticate }) => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
-  const navigate = useNavigate();
+const app = express();
+app.use(cors({
+    origin: "*", // Permitir todas las orígenes
+}));
+app.use(express.json());
 
-  // Generar credenciales aleatorias
-  const generateRandomCredentials = () => {
-    const randomUsername = `user${Math.random().toString(36).substring(2, 8)}`;
-    const randomPassword = Math.random().toString(36).substring(2, 10);
-    setUsername(randomUsername);
-    setPassword(randomPassword);
-  };
+// Configuración de la base de datos MySQL
+const db = mysql.createConnection({
+    host: "b0cjyt4hyfsobbbxc04p-mysql.services.clever-cloud.com",
+    user: "usrweyh3z65hle1p",
+    password: "arlNRzFJJ7WbqossOnzP",
+    database: "b0cjyt4hyfsobbbxc04p",
+    port: 3306,
+});
 
-  // Manejo del login automático
-  const handleAutoLogin = async () => {
-    try {
-      const loginResponse = await fetch("https://chamba-back.onrender.com/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: username, password }),
-      });
-
-      if (loginResponse.ok) {
-        const data = await loginResponse.json();
-        setMessage(`¡Bienvenido de nuevo, ${data.username}!`);
-        localStorage.setItem("isAuthenticated", "true");
-        onAuthenticate();
-        setTimeout(() => navigate("/home"), 1000);
-      } else if (loginResponse.status === 404) {
-        const registerResponse = await fetch("https://chamba-back.onrender.com/register", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username, email: username, password }),
-        });
-
-        if (registerResponse.ok) {
-          setMessage("Usuario registrado automáticamente. ¡Bienvenido!");
-          localStorage.setItem("isAuthenticated", "true");
-          onAuthenticate();
-          setTimeout(() => navigate("/home"), 1000);
-        } else {
-          setMessage("Error al registrar usuario.");
-        }
-      } else {
-        setMessage("Error al iniciar sesión.");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      setMessage("Error en el servidor.");
+// Conexión a la base de datos
+db.connect((err) => {
+    if (err) {
+        console.error("Error al conectar a MySQL:", err);
+        return;
     }
-  };
+    console.log("Conectado a MySQL en Clever Cloud");
+});
 
-  useEffect(() => {
-    generateRandomCredentials();
-  }, []);
+// Crear tabla de usuarios si no existe
+db.query(
+    `CREATE TABLE IF NOT EXISTS users (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        username VARCHAR(255) NOT NULL,
+        email VARCHAR(255) NOT NULL UNIQUE,
+        password VARCHAR(255) NOT NULL
+    )`,
+    (err) => {
+        if (err) console.error("Error al crear tabla:", err);
+    }
+);
 
-  return (
-    <div
-      style={{
-        backgroundColor: "#f3f4f6",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-      }}
-    >
-      <div
-        style={{
-          backgroundColor: "white",
-          padding: "30px 40px",
-          borderRadius: "8px",
-          boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
-          textAlign: "center",
-          maxWidth: "400px",
-          width: "100%",
-        }}
-      >
-        <h2 style={{ color: "#333", fontSize: "24px", marginBottom: "20px" }}>Inicio de Sesión</h2>
-        <form>
-          <input
-            type="text"
-            value={username}
-            readOnly
-            placeholder="Usuario"
-            style={{
-              width: "100%",
-              padding: "10px",
-              marginBottom: "15px",
-              border: "1px solid #ccc",
-              borderRadius: "5px",
-              fontSize: "16px",
-            }}
-          />
-          <input
-            type="password"
-            value={password}
-            readOnly
-            placeholder="Contraseña"
-            style={{
-              width: "100%",
-              padding: "10px",
-              marginBottom: "15px",
-              border: "1px solid #ccc",
-              borderRadius: "5px",
-              fontSize: "16px",
-            }}
-          />
-          <button
-            type="button"
-            onClick={handleAutoLogin}
-            style={{
-              backgroundColor: "#007bff",
-              color: "white",
-              border: "none",
-              padding: "10px 20px",
-              fontSize: "16px",
-              cursor: "pointer",
-              borderRadius: "5px",
-              transition: "background-color 0.3s ease",
-            }}
-          >
-            Login Automático
-          </button>
-        </form>
-        <p style={{ marginTop: "15px", fontSize: "14px", color: "green" }}>{message}</p>
-      </div>
-    </div>
-  );
-};
+// Endpoint para registrar usuarios
+app.post("/register", (req, res) => {
+    const { username, email, password } = req.body;
 
-export default Login;
+    // Validar datos
+    if (!username || !email || !password) {
+        return res.status(400).json({ error: "Todos los campos son obligatorios" });
+    }
+
+    // Insertar los datos directamente en la base de datos
+    db.query(
+        "INSERT INTO users (username, email, password) VALUES (?, ?, ?)",
+        [username, email, password],
+        (err) => {
+            if (err) {
+                if (err.code === "ER_DUP_ENTRY") {
+                    return res.status(400).json({ error: "El correo ya está registrado" });
+                }
+                return res.status(500).json({ error: "Error al registrar usuario" });
+            }
+            res.json({ message: "Usuario registrado exitosamente" });
+        }
+    );
+});
+
+// Endpoint para contar usuarios registrados
+app.get("/user-count", (req, res) => {
+    db.query("SELECT COUNT(*) AS count FROM users", (err, results) => {
+        if (err) {
+            res.status(500).json({ error: "Error al obtener el conteo de usuarios" });
+        } else {
+            res.json({ count: results[0].count });
+        }
+    });
+});
+
+// Iniciar el servidor
+const PORT = 3001;
+app.listen(PORT, () => {
+    console.log(`Servidor corriendo en http://localhost:${PORT}`);
+});
