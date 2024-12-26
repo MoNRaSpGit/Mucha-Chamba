@@ -15,38 +15,23 @@ const Login = ({ onAuthenticate }) => {
     setPassword(randomPassword);
   };
 
-  // Manejo del login automático
-  const handleAutoLogin = async () => {
+  // Manejo del registro automático
+  const handleRegisterAndNavigate = async () => {
     try {
-      const loginResponse = await fetch("https://chamba-back.onrender.com/login", {
+      const registerResponse = await fetch("https://chamba-back.onrender.com/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: username, password }),
+        body: JSON.stringify({ username, email: username, password }),
       });
 
-      if (loginResponse.ok) {
-        const data = await loginResponse.json();
-        setMessage(`¡Bienvenido de nuevo, ${data.username}!`);
+      if (registerResponse.ok) {
+        setMessage("Usuario registrado automáticamente. ¡Bienvenido!");
         localStorage.setItem("isAuthenticated", "true");
         onAuthenticate();
         setTimeout(() => navigate("/home"), 1000);
-      } else if (loginResponse.status === 404) {
-        const registerResponse = await fetch("https://chamba-back.onrender.com/register", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username, email: username, password }),
-        });
-
-        if (registerResponse.ok) {
-          setMessage("Usuario registrado automáticamente. ¡Bienvenido!");
-          localStorage.setItem("isAuthenticated", "true");
-          onAuthenticate();
-          setTimeout(() => navigate("/home"), 1000);
-        } else {
-          setMessage("Error al registrar usuario.");
-        }
       } else {
-        setMessage("Error al iniciar sesión.");
+        const errorData = await registerResponse.json();
+        setMessage(errorData.error || "Error al registrar usuario.");
       }
     } catch (error) {
       console.error("Error:", error);
@@ -79,7 +64,7 @@ const Login = ({ onAuthenticate }) => {
           width: "100%",
         }}
       >
-        <h2 style={{ color: "#333", fontSize: "24px", marginBottom: "20px" }}>Inicio de Sesión</h2>
+        <h2 style={{ color: "#333", fontSize: "24px", marginBottom: "20px" }}>Registro Automático</h2>
         <form>
           <input
             type="text"
@@ -111,7 +96,7 @@ const Login = ({ onAuthenticate }) => {
           />
           <button
             type="button"
-            onClick={handleAutoLogin}
+            onClick={handleRegisterAndNavigate}
             style={{
               backgroundColor: "#007bff",
               color: "white",
@@ -123,7 +108,7 @@ const Login = ({ onAuthenticate }) => {
               transition: "background-color 0.3s ease",
             }}
           >
-            Login Automático
+            Registrarse e Ingresar
           </button>
         </form>
         <p style={{ marginTop: "15px", fontSize: "14px", color: "green" }}>{message}</p>
