@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import "../Css/tarjetas.css";
 
 const Login = ({ onAuthenticate }) => {
   const [username, setUsername] = useState("");
@@ -25,7 +26,7 @@ const Login = ({ onAuthenticate }) => {
       if (loginResponse.ok) {
         const data = await loginResponse.json();
         setMessage(`¡Bienvenido de nuevo, ${data.username}!`);
-        localStorage.setItem("isAuthenticated", "true"); // Guardar estado de autenticación
+        localStorage.setItem("isAuthenticated", "true");
         onAuthenticate();
         setTimeout(() => navigate("/home"), 1000);
       } else if (loginResponse.status === 404) {
@@ -37,7 +38,7 @@ const Login = ({ onAuthenticate }) => {
 
         if (registerResponse.ok) {
           setMessage("Usuario registrado automáticamente. ¡Bienvenido!");
-          localStorage.setItem("isAuthenticated", "true"); // Guardar estado de autenticación
+          localStorage.setItem("isAuthenticated", "true");
           onAuthenticate();
           setTimeout(() => navigate("/home"), 1000);
         } else {
@@ -57,40 +58,22 @@ const Login = ({ onAuthenticate }) => {
   }, []);
 
   return (
-    <div style={{ padding: "20px", textAlign: "center" }}>
-      <h2>Inicio de Sesión</h2>
-      <form>
-        <div>
-          <label>
-            Nombre de Usuario:
-            <input
-              type="text"
-              value={username}
-              readOnly
-              style={{ marginLeft: "10px" }}
-            />
-          </label>
-        </div>
-        <div style={{ marginTop: "10px" }}>
-          <label>
-            Contraseña:
-            <input
-              type="password"
-              value={password}
-              readOnly
-              style={{ marginLeft: "10px" }}
-            />
-          </label>
-        </div>
-        <button
-          type="button"
-          className="btn btn-primary mt-3"
-          onClick={handleAutoLogin}
-        >
-          Login Automático
-        </button>
-      </form>
-      <p style={{ marginTop: "20px", color: "green" }}>{message}</p>
+    <div className="login-container">
+      <div className="login-form">
+        <h2>Inicio de Sesión</h2>
+        <form>
+          <input type="text" value={username} readOnly placeholder="Usuario" />
+          <input type="password" value={password} readOnly placeholder="Contraseña" />
+          <button
+            type="button"
+            className="btn btn-primary mt-3"
+            onClick={handleAutoLogin}
+          >
+            Login Automático
+          </button>
+        </form>
+        <p>{message}</p>
+      </div>
     </div>
   );
 };
