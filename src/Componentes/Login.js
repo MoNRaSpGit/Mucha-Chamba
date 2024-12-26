@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import "../Css/login.css"
 
 const Login = ({ onAuthenticate }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState("Preparando inicio de sesión...");
+  const [countdown, setCountdown] = useState(10); // Máximo tiempo estimado
+  const [isLoading, setIsLoading] = useState(false); // Indicador de carga
   const navigate = useNavigate();
 
   // Generar credenciales aleatorias
@@ -17,28 +20,48 @@ const Login = ({ onAuthenticate }) => {
 
   // Manejo del registro automático
   const handleRegisterAndNavigate = async () => {
+    setIsLoading(true); // Inicia indicador de carga
     try {
-      const registerResponse = await fetch("https://chamba-back.onrender.com/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, email: username, password }),
-      });
+      const registerResponse = await fetch(
+        "https://chamba-back.onrender.com/register",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, email: username, password }),
+        }
+      );
 
       if (registerResponse.ok) {
         setMessage("Usuario registrado automáticamente. ¡Bienvenido!");
         localStorage.setItem("isAuthenticated", "true");
         onAuthenticate();
-        setTimeout(() => navigate("/home"), 1000);
+        setTimeout(() => navigate("/home"), 1000); // Navegar después de un breve tiempo
       } else {
         const errorData = await registerResponse.json();
         setMessage(errorData.error || "Error al registrar usuario.");
+        setIsLoading(false); // Detener carga si hay error
       }
     } catch (error) {
       console.error("Error:", error);
       setMessage("Error en el servidor.");
+      setIsLoading(false); // Detener carga si hay error
     }
   };
 
+  // Controlar el tiempo estimado
+  useEffect(() => {
+    if (isLoading && countdown > 0) {
+      const timer = setInterval(() => {
+        setCountdown((prev) => prev - 1);
+      }, 1000);
+
+      return () => clearInterval(timer); // Limpiar intervalo
+    } else if (countdown === 0 && isLoading) {
+      setMessage("Esto puede tardar un poco más...");
+    }
+  }, [isLoading, countdown]);
+
+  // Generar credenciales al montar el componente
   useEffect(() => {
     generateRandomCredentials();
   }, []);
@@ -64,7 +87,9 @@ const Login = ({ onAuthenticate }) => {
           width: "100%",
         }}
       >
-        <h2 style={{ color: "#333", fontSize: "24px", marginBottom: "20px" }}>Registro Automático</h2>
+        <h2 style={{ color: "#333", fontSize: "24px", marginBottom: "20px" }}>
+          Registro Automático
+        </h2>
         <form>
           <input
             type="text"
@@ -94,24 +119,52 @@ const Login = ({ onAuthenticate }) => {
               fontSize: "16px",
             }}
           />
-          <button
-            type="button"
-            onClick={handleRegisterAndNavigate}
-            style={{
-              backgroundColor: "#007bff",
-              color: "white",
-              border: "none",
-              padding: "10px 20px",
-              fontSize: "16px",
-              cursor: "pointer",
-              borderRadius: "5px",
-              transition: "background-color 0.3s ease",
-            }}
-          >
-            Login Automatico
-          </button>
+          {!isLoading ? (
+            <button
+              type="button"
+              onClick={handleRegisterAndNavigate}
+              style={{
+                backgroundColor: "#007bff",
+                color: "white",
+                border: "none",
+                padding: "10px 20px",
+                fontSize: "16px",
+                cursor: "pointer",
+                borderRadius: "5px",
+                transition: "background-color 0.3s ease",
+              }}
+            >
+              Iniciar Sesión
+            </button>
+          ) : (
+            <div>
+              <div
+                style={{
+                  margin: "20px auto",
+                  border: "5px solid #f3f3f3",
+                  borderRadius: "50%",
+                  borderTop: "5px solid #007bff",
+                  width: "50px",
+                  height: "50px",
+                  animation: "spin 1s linear infinite",
+                }}
+              ></div>
+              <p
+                style={{
+                  marginTop: "15px",
+                  fontSize: "16px",
+                  color: "#007bff",
+                  fontWeight: "bold",
+                }}
+              >
+                Esta cuenta se logueará en {countdown} segundos...
+              </p>
+            </div>
+          )}
         </form>
-        <p style={{ marginTop: "15px", fontSize: "14px", color: "green" }}>{message}</p>
+        <p style={{ marginTop: "15px", fontSize: "14px", color: "green" }}>
+          {message}
+        </p>
       </div>
     </div>
   );
