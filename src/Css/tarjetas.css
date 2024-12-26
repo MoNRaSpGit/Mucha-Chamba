@@ -157,3 +157,49 @@
     padding: 10px 15px;
   }
 }
+
+/* Estilo especial para la tarjeta premium */
+.premium-card {
+  border: 2px solid gold; /* Borde dorado */
+  background-color: #fff8dc; /* Fondo dorado suave */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+  position: relative; /* Necesario para posicionar el confeti */
+  overflow: hidden; /* Para que el confeti no se salga del borde */
+}
+
+/* Estilo para las medallas */
+.medals {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 18px;
+}
+
+/* Confeti */
+.confetti {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background-color: var(--confetti-color);
+  top: -10px;
+  animation: fall 2s infinite ease-in;
+}
+
+.confetti:nth-child(1) { left: 10%; --confetti-color: red; animation-delay: 0s; }
+.confetti:nth-child(2) { left: 20%; --confetti-color: blue; animation-delay: 0.2s; }
+.confetti:nth-child(3) { left: 30%; --confetti-color: green; animation-delay: 0.4s; }
+.confetti:nth-child(4) { left: 40%; --confetti-color: yellow; animation-delay: 0.6s; }
+.confetti:nth-child(5) { left: 50%; --confetti-color: purple; animation-delay: 0.8s; }
+.confetti:nth-child(6) { left: 60%; --confetti-color: orange; animation-delay: 1s; }
+.confetti:nth-child(7) { left: 70%; --confetti-color: pink; animation-delay: 1.2s; }
+.confetti:nth-child(8) { left: 80%; --confetti-color: cyan; animation-delay: 1.4s; }
+.confetti:nth-child(9) { left: 90%; --confetti-color: lime; animation-delay: 1.6s; }
+
+@keyframes fall {
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+  100% {
+    transform: translateY(100px) rotate(360deg);
+  }
+}

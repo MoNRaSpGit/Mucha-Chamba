@@ -1,7 +1,7 @@
 import React from 'react';
-import  "../Css/tarjetas.css"
+import "../Css/tarjetas.css";
 
-const UserItem = ({ name, profession, available }) => {
+const UserItem = ({ id, name, profession, available }) => {
   // Mapear profesiones a íconos/emojis
   const professionIcons = {
     Plomero: '🔧',
@@ -9,15 +9,49 @@ const UserItem = ({ name, profession, available }) => {
     Peluquera: '✂️',
     Electricista: '💡',
     Pintora: '🎨',
+    Bufanda: '🧣', // Nuevo ícono para bufanda
+    Zanahoria: '🥕', // Nuevo ícono para zanahoria
+    Hoja: '🍀', // Nuevo ícono para hoja verde (trébol)
+    Manito: '👋', // Nuevo ícono para manitos
+    Lentes: '😎' // Nuevo ícono para lentes de sol
   };
 
-  // Obtener el emoji según la profesión
-  const professionIcon = Object.keys(professionIcons).find(key => profession.includes(key))
-    ? professionIcons[profession.split(' ')[0]]
-    : '👷';
+  // Condicional para cambiar el ícono de los usuarios con ids específicos
+  const professionIcon = (id) => {
+    switch (id) {
+      case 1:
+        return '🧣'; // Bufanda para el usuario con id 1
+      case 2:
+        return '🍀'; // Hoja verde (trébol) para el usuario con id 2
+      case 3:
+        return '👋'; // Manitos para el usuario con id 3
+      case 4:
+        return '😎'; // Lentes de sol para el usuario con id 4
+      default:
+        return Object.keys(professionIcons).find(key => profession.includes(key))
+          ? professionIcons[profession.split(' ')[0]]
+          : '👷';
+    }
+  };
 
   return (
-    <div className="card mb-3 shadow-sm">
+    <div className={`card mb-3 shadow-sm ${id === 4 ? 'premium-card' : ''}`}>
+      {id === 4 && (
+        <>
+          <div className="medals">
+            🥇 🥈 🥉 {/* Medallas en la parte superior izquierda */}
+          </div>
+          <div className="confetti"></div>
+          <div className="confetti"></div>
+          <div className="confetti"></div>
+          <div className="confetti"></div>
+          <div className="confetti"></div>
+          <div className="confetti"></div>
+          <div className="confetti"></div>
+          <div className="confetti"></div>
+          <div className="confetti"></div>
+        </>
+      )}
       <div className="card-body d-flex align-items-center">
         {/* Avatar genérico */}
         <div
@@ -40,11 +74,9 @@ const UserItem = ({ name, profession, available }) => {
         <div>
           <h5 className="card-title mb-1">{name}</h5>
           <p className="card-text mb-0">
-            {professionIcon} {profession}
+            {professionIcon(id)} {profession}
           </p>
-          <span
-            className={`badge ${available ? 'bg-success' : 'bg-danger'}`}
-          >
+          <span className={`badge ${available ? 'bg-success' : 'bg-danger'}`}>
             {available ? 'Disponible' : 'No Disponible'}
           </span>
         </div>
