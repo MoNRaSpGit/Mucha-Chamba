@@ -1,3 +1,4 @@
+/* Estilo general de las tarjetas */
 .card {
   transition: transform 0.2s ease-in-out;
 }
@@ -15,13 +16,14 @@
   margin-top: 5px;
 }
 
-
-
+/* Detalles de usuario */
 .user-details-card {
   background-color: #f9f9f9;
   border: 1px solid #ddd;
   border-radius: 10px;
   transition: box-shadow 0.3s ease;
+  padding: 20px;
+  width: 100%; /* Asegurar que ocupa todo el espacio en pantallas pequeñas */
 }
 
 .user-details-card:hover {
@@ -39,21 +41,6 @@
 .user-details-card .btn {
   border-radius: 5px;
 }
-
-
-.user-details-card {
-  background-color: #f9f9f9;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  transition: box-shadow 0.3s ease;
-  padding: 20px;
-  width: 100%; /* Asegurar que ocupa todo el espacio en pantallas pequeñas */
-}
-
-.user-details-card:hover {
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-}
-
 
 /* Estilo del encabezado */
 .header {
@@ -75,21 +62,32 @@
   font-weight: bold;
 }
 
-/* Estilo del botón de cierre de sesión */
+/* Botón de cierre de sesión */
 .logout-button {
-  background-color: white;
-  color: #007bff;
+  background-color: #dc3545;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
   border: none;
-  padding: 10px 15px;
-  border-radius: 5px;
+  padding: 12px 20px;
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 16px;
-  position: absolute;
-  right: 20px;
+  width: 100%; /* Para ocupar todo el ancho en móviles */
+  max-width: 300px; /* Ancho máximo para mantenerlo centrado */
+  transition: background-color 0.3s ease;
 }
 
+.logout-button:hover {
+  background-color: #b02a37;
+}
 
-/* Estilo para el contenedor del formulario */
+.text-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Login */
 .login-container {
   display: flex;
   justify-content: center;
@@ -98,7 +96,6 @@
   background-color: #f3f4f6; /* Fondo suave */
 }
 
-/* Estilo para el formulario */
 .login-form {
   background-color: white;
   padding: 30px 40px;
@@ -109,14 +106,12 @@
   text-align: center;
 }
 
-/* Título */
 .login-form h2 {
   margin-bottom: 20px;
   font-size: 24px;
   color: #333;
 }
 
-/* Campos de entrada */
 .login-form input {
   width: 100%;
   padding: 10px;
@@ -126,7 +121,6 @@
   font-size: 16px;
 }
 
-/* Botón de login */
 .login-form .btn-primary {
   background-color: #007bff;
   color: white;
@@ -142,17 +136,13 @@
   background-color: #0056b3;
 }
 
-/* Mensaje */
 .login-form p {
   margin-top: 15px;
   font-size: 14px;
   color: green;
 }
-/*sdfds*/
 
-
-
-
+/* Responsivo */
 @media (max-width: 576px) {
   .user-details-card {
     padding: 15px;
@@ -161,6 +151,9 @@
   .btn {
     font-size: 14px;
   }
+
+  .logout-button {
+    font-size: 16px;
+    padding: 10px 15px;
+  }
 }
-
-
