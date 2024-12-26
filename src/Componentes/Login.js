@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import "../Css/tarjetas.css";
 
 const Login = ({ onAuthenticate }) => {
   const [username, setUsername] = useState("");
@@ -8,6 +7,7 @@ const Login = ({ onAuthenticate }) => {
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
+  // Generar credenciales aleatorias
   const generateRandomCredentials = () => {
     const randomUsername = `user${Math.random().toString(36).substring(2, 8)}`;
     const randomPassword = Math.random().toString(36).substring(2, 10);
@@ -15,6 +15,7 @@ const Login = ({ onAuthenticate }) => {
     setPassword(randomPassword);
   };
 
+  // Manejo del login automático
   const handleAutoLogin = async () => {
     try {
       const loginResponse = await fetch("http://localhost:3001/login", {
@@ -58,21 +59,74 @@ const Login = ({ onAuthenticate }) => {
   }, []);
 
   return (
-    <div className="login-container">
-      <div className="login-form">
-        <h2>Inicio de Sesión</h2>
+    <div
+      style={{
+        backgroundColor: "#f3f4f6",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+      }}
+    >
+      <div
+        style={{
+          backgroundColor: "white",
+          padding: "30px 40px",
+          borderRadius: "8px",
+          boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
+          textAlign: "center",
+          maxWidth: "400px",
+          width: "100%",
+        }}
+      >
+        <h2 style={{ color: "#333", fontSize: "24px", marginBottom: "20px" }}>Inicio de Sesión</h2>
         <form>
-          <input type="text" value={username} readOnly placeholder="Usuario" />
-          <input type="password" value={password} readOnly placeholder="Contraseña" />
+          <input
+            type="text"
+            value={username}
+            readOnly
+            placeholder="Usuario"
+            style={{
+              width: "100%",
+              padding: "10px",
+              marginBottom: "15px",
+              border: "1px solid #ccc",
+              borderRadius: "5px",
+              fontSize: "16px",
+            }}
+          />
+          <input
+            type="password"
+            value={password}
+            readOnly
+            placeholder="Contraseña"
+            style={{
+              width: "100%",
+              padding: "10px",
+              marginBottom: "15px",
+              border: "1px solid #ccc",
+              borderRadius: "5px",
+              fontSize: "16px",
+            }}
+          />
           <button
             type="button"
-            className="btn btn-primary mt-3"
             onClick={handleAutoLogin}
+            style={{
+              backgroundColor: "#007bff",
+              color: "white",
+              border: "none",
+              padding: "10px 20px",
+              fontSize: "16px",
+              cursor: "pointer",
+              borderRadius: "5px",
+              transition: "background-color 0.3s ease",
+            }}
           >
             Login Automático
           </button>
         </form>
-        <p>{message}</p>
+        <p style={{ marginTop: "15px", fontSize: "14px", color: "green" }}>{message}</p>
       </div>
     </div>
   );
