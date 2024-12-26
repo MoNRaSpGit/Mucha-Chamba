@@ -18,7 +18,7 @@ const Login = ({ onAuthenticate }) => {
   // Manejo del login automático
   const handleAutoLogin = async () => {
     try {
-      const loginResponse = await fetch("http://localhost:3001/login", {
+      const loginResponse = await fetch("https://chamba-back.onrender.com/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: username, password }),
@@ -31,7 +31,7 @@ const Login = ({ onAuthenticate }) => {
         onAuthenticate();
         setTimeout(() => navigate("/home"), 1000);
       } else if (loginResponse.status === 404) {
-        const registerResponse = await fetch("http://localhost:3001/register", {
+        const registerResponse = await fetch("https://chamba-back.onrender.com/register", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ username, email: username, password }),
