@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/Mucha-Chamba/static/css/main.d3d388b1.css",
-    "main.js": "/Mucha-Chamba/static/js/main.e35a0b85.js",
+    "main.js": "/Mucha-Chamba/static/js/main.3a8d537e.js",
     "index.html": "/Mucha-Chamba/index.html",
     "main.d3d388b1.css.map": "/Mucha-Chamba/static/css/main.d3d388b1.css.map",
-    "main.e35a0b85.js.map": "/Mucha-Chamba/static/js/main.e35a0b85.js.map"
+    "main.3a8d537e.js.map": "/Mucha-Chamba/static/js/main.3a8d537e.js.map"
   },
   "entrypoints": [
     "static/css/main.d3d388b1.css",
-    "static/js/main.e35a0b85.js"
+    "static/js/main.3a8d537e.js"
   ]
 }
