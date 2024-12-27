@@ -1,8 +1,11 @@
 import React, { useState, useRef } from "react";
 import "../Css/tarjetas.css";
 import CardPaymentForm from "./CardPaymentForm";
+import { useDispatch } from "react-redux";
+import { addNotification } from "../Slice/notificationSlice";
 
 const UserDetails = ({ user, onClose, recommendations, onSelectRecommended }) => {
+  const dispatch = useDispatch();
   const [serviceRequested, setServiceRequested] = useState(false);
   const [requestSuccessful, setRequestSuccessful] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState(null); // Método de pago seleccionado
@@ -49,16 +52,13 @@ const UserDetails = ({ user, onClose, recommendations, onSelectRecommended }) =>
         paymentRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
       }, 200); // Pequeño retraso para asegurar que el formulario se renderiza antes de desplazar
     } else if (method === "efectivo") {
-      setRequestSuccessful(true); // Mostrar el mensaje de éxito
-      setTimeout(() => {
-        setRequestSuccessful(false);
-        onClose(); // Cerrar el componente
-      }, 3000);
+      handlePaymentSuccess();
     }
   };
 
   const handlePaymentSuccess = () => {
     setRequestSuccessful(true); // Mostrar el mensaje de éxito
+    dispatch(addNotification(`¡Servicio confirmado con ${user.name}!`)); // Añade la notificación
     setTimeout(() => {
       setRequestSuccessful(false);
       onClose(); // Cerrar el componente

@@ -48,19 +48,21 @@
   color: white;
   padding: 10px 20px;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
+  justify-content: space-between; /* Asegura que el título y la campanita estén en extremos opuestos */
+  align-items: center; /* Centra los elementos verticalmente */
 }
 
 /* Estilo del título */
+/* Estilo del título con marco rojo */
 .header-title {
   margin: 0;
-  text-align: center;
-  flex-grow: 1;
   font-size: 24px;
   font-weight: bold;
+  flex-grow: 1;
+  text-align: center;
 }
+
+
 
 /* Botón de cierre de sesión */
 .logout-button {
@@ -203,3 +205,64 @@
     transform: translateY(100px) rotate(360deg);
   }
 }
+
+
+
+
+
+
+
+
+
+/* -----------------------------------*/
+
+
+
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1200px;
+}
+
+
+
+.notification-bell {
+  font-size: 24px;
+  cursor: pointer;
+  position: relative;
+}
+
+.notification-count {
+  position: absolute;
+  top: -5px;
+  right: -10px;
+  background-color: red;
+  color: white;
+  font-size: 12px;
+  border-radius: 50%;
+  padding: 2px 6px;
+}
+
+
+
+/* Estilo del encabezado principal */
+.header-container {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Contenedor interno para el título y la campanita */
+
+
+/* Estilo del título */
+
+
+

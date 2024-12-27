@@ -67,91 +67,83 @@ const UserList = () => {
 
   const filteredUsers = users
     .filter((user) => (filterAvailable === null ? true : user.available === filterAvailable))
-    .filter((user) => user.profession.toLowerCase().includes(searchTerm.toLowerCase()))
-    .sort((a, b) => (a.id === 1 ? -1 : b.id === 1 ? 1 : 0));
+    .filter((user) => user.profession.toLowerCase().includes(searchTerm.toLowerCase()));
 
   return (
-    <div>
-      {/* Encabezado */}
-      <header className="header">
-        <h1 className="header-title">Chamba Ya!!!</h1>
-      </header>
-
-      <div className="container mt-3">
-        {/* Filtros */}
-        <div className="row mb-3">
-          <div className="col-12 col-md-4 mb-2">
-            <button
-              className={`btn w-100 ${filterAvailable === null ? "btn-primary" : "btn-outline-primary"}`}
-              onClick={() => setFilterAvailable(null)}
-            >
-              Todos
-            </button>
-          </div>
-          <div className="col-12 col-md-4 mb-2">
-            <button
-              className={`btn w-100 ${filterAvailable === true ? "btn-primary" : "btn-outline-primary"}`}
-              onClick={() => setFilterAvailable(true)}
-            >
-              Disponibles
-            </button>
-          </div>
-          <div className="col-12 col-md-4">
-            <button
-              className={`btn w-100 ${filterAvailable === false ? "btn-primary" : "btn-outline-primary"}`}
-              onClick={() => setFilterAvailable(false)}
-            >
-              No Disponibles
-            </button>
-          </div>
-        </div>
-
-        {/* Buscador */}
-        <div className="row mb-3">
-          <div className="col-12">
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Buscar por profesión..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-        </div>
-
-        {/* Lista de Usuarios */}
-        <div className="row">
-          {filteredUsers.length > 0 ? (
-            filteredUsers.map((user) => (
-              <div className="col-12 col-sm-6 col-lg-4 mb-3" key={user.id}>
-                <div onClick={() => handleSelectUser(user)} style={{ cursor: "pointer" }}>
-                  <UserItem id={user.id} name={user.name} profession={user.profession} available={user.available} />
-                </div>
-              </div>
-            ))
-          ) : (
-            <div className="col-12 text-muted">No se encontraron resultados.</div>
-          )}
-        </div>
-
-        {/* Detalles del Usuario */}
-        {selectedUser && (
-          <div ref={detailsRef}>
-            <UserDetails
-              user={selectedUser}
-              onClose={() => setSelectedUser(null)}
-              recommendations={JSON.parse(localStorage.getItem("recommendations") || "[]")}
-              onSelectRecommended={handleSelectRecommended}
-            />
-          </div>
-        )}
-
-        {/* Botón de Cerrar Sesión */}
-        <div className="text-center mt-4">
-          <button className="logout-button" onClick={handleLogout}>
-            Cerrar Sesión
+    <div className="container mt-3">
+      {/* Filtros */}
+      <div className="row mb-3">
+        <div className="col-12 col-md-4 mb-2">
+          <button
+            className={`btn w-100 ${filterAvailable === null ? "btn-primary" : "btn-outline-primary"}`}
+            onClick={() => setFilterAvailable(null)}
+          >
+            Todos
           </button>
         </div>
+        <div className="col-12 col-md-4 mb-2">
+          <button
+            className={`btn w-100 ${filterAvailable === true ? "btn-primary" : "btn-outline-primary"}`}
+            onClick={() => setFilterAvailable(true)}
+          >
+            Disponibles
+          </button>
+        </div>
+        <div className="col-12 col-md-4">
+          <button
+            className={`btn w-100 ${filterAvailable === false ? "btn-primary" : "btn-outline-primary"}`}
+            onClick={() => setFilterAvailable(false)}
+          >
+            No Disponibles
+          </button>
+        </div>
+      </div>
+
+      {/* Buscador */}
+      <div className="row mb-3">
+        <div className="col-12">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Buscar por profesión..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+      </div>
+
+      {/* Lista de Usuarios */}
+      <div className="row">
+        {filteredUsers.length > 0 ? (
+          filteredUsers.map((user) => (
+            <div className="col-12 col-sm-6 col-lg-4 mb-3" key={user.id}>
+              <div onClick={() => handleSelectUser(user)} style={{ cursor: "pointer" }}>
+                <UserItem id={user.id} name={user.name} profession={user.profession} available={user.available} />
+              </div>
+            </div>
+          ))
+        ) : (
+          <div className="col-12 text-muted">No se encontraron resultados.</div>
+        )}
+      </div>
+
+      {/* Detalles del Usuario */}
+      {selectedUser && (
+        <div ref={detailsRef}>
+          <UserDetails
+            user={selectedUser}
+            onClose={() => setSelectedUser(null)}
+            recommendations={JSON.parse(localStorage.getItem("recommendations") || "[]")}
+            onSelectRecommended={handleSelectRecommended}
+          />
+        </div>
+      )}
+
+      {/* Botón de Cerrar Sesión */}
+      <div className="text-center mt-4">
+        <button className="logout-button" onClick={handleLogout}>
+          Cerrar Sesión
+        </button>
       </div>
     </div>
   );
