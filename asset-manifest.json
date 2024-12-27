@@ -1,13 +1,14 @@
 {
   "files": {
-    "main.css": "/Mucha-Chamba/static/css/main.8390745b.css",
-    "main.js": "/Mucha-Chamba/static/js/main.e4362214.js",
+    "main.css": "/Mucha-Chamba/static/css/main.49bdb984.css",
+    "main.js": "/Mucha-Chamba/static/js/main.89bc0d7c.js",
+    "static/media/notiNueva.mp3": "/Mucha-Chamba/static/media/notiNueva.66871cdda5fcd84752bd.mp3",
     "index.html": "/Mucha-Chamba/index.html",
-    "main.8390745b.css.map": "/Mucha-Chamba/static/css/main.8390745b.css.map",
-    "main.e4362214.js.map": "/Mucha-Chamba/static/js/main.e4362214.js.map"
+    "main.49bdb984.css.map": "/Mucha-Chamba/static/css/main.49bdb984.css.map",
+    "main.89bc0d7c.js.map": "/Mucha-Chamba/static/js/main.89bc0d7c.js.map"
   },
   "entrypoints": [
-    "static/css/main.8390745b.css",
-    "static/js/main.e4362214.js"
+    "static/css/main.49bdb984.css",
+    "static/js/main.89bc0d7c.js"
   ]
 }
