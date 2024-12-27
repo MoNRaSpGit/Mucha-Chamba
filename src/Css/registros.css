@@ -1,0 +1,125 @@
+/* Estilos generales para el contenedor del registro */
+.register-container {
+    background-color: #f3f4f6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  .register-container form {
+    background-color: white;
+    padding: 30px 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+  }
+  
+  .register-container h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+  }
+  
+  /* Estilos para los campos del formulario */
+  .register-container .form-group {
+    margin-bottom: 15px;
+    text-align: left;
+  }
+  
+  .register-container .form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #555;
+  }
+  
+  .register-container .form-group input,
+  .register-container .form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+  }
+  
+  .register-container .form-group input:focus,
+  .register-container .form-group select:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 4px rgba(0, 123, 255, 0.2);
+  }
+  
+  /* Botón de registro */
+  .register-container button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 100%;
+    transition: background-color 0.3s ease;
+  }
+  
+  .register-container button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Mensajes */
+  .register-container p {
+    margin-top: 15px;
+    font-size: 14px;
+    color: #555;
+  }
+  
+  .register-container p strong {
+    color: #007bff;
+    cursor: pointer;
+  }
+  
+  .register-container p strong:hover {
+    text-decoration: underline;
+  }
+  
+  /* Mensaje de error o éxito */
+  .register-container p.message {
+    font-size: 14px;
+    margin-top: 10px;
+  }
+  
+  .register-container p.message.error {
+    color: #dc3545;
+  }
+  
+  .register-container p.message.success {
+    color: #28a745;
+  }
+  
+  /* Responsividad */
+  @media (max-width: 576px) {
+    .register-container form {
+      padding: 20px;
+    }
+  
+    .register-container h2 {
+      font-size: 20px;
+    }
+  
+    .register-container .form-group input,
+    .register-container .form-group select {
+      font-size: 14px;
+    }
+  
+    .register-container button {
+      font-size: 14px;
+      padding: 10px 15px;
+    }
+  }
+  

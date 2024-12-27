@@ -1,15 +1,18 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import "../Css/tarjetas.css";
 import CardPaymentForm from "./CardPaymentForm";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addNotification } from "../Slice/notificationSlice";
 
 const UserDetails = ({ user, onClose, recommendations, onSelectRecommended }) => {
   const dispatch = useDispatch();
+  const loggedUser = useSelector((state) => state.user);
   const [serviceRequested, setServiceRequested] = useState(false);
   const [requestSuccessful, setRequestSuccessful] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState(null); // Método de pago seleccionado
   const [showPaymentOptions, setShowPaymentOptions] = useState(false); // Mostrar botones de pago
+  const [estimatedTime, setEstimatedTime] = useState(null); // Tiempo estimado de llegada
+  const [isCalculatingTime, setIsCalculatingTime] = useState(false); // Indicador de cálculo de tiempo
 
   const professionIcons = {
     Plomero: "🔧",
@@ -31,10 +34,21 @@ const UserDetails = ({ user, onClose, recommendations, onSelectRecommended }) =>
     ? professionIcons[user.profession.split(" ")[0]]
     : "👷";
 
-  const estimatedTime = 25; // Tiempo ficticio en minutos
-  const address = "Calle Falsa 123"; // Dirección ficticia
+  const userAddress = loggedUser.address || "Sin dirección especificada"; // Dirección del usuario logueado
 
   const paymentRef = useRef(null); // Ref para desplazar el scroll al formulario de tarjeta
+
+  useEffect(() => {
+    // Simular cálculo del tiempo estimado de llegada
+    setIsCalculatingTime(true);
+    const timer = setTimeout(() => {
+      const randomTime = Math.floor(Math.random() * (35 - 10 + 1)) + 10; // Generar número aleatorio entre 10 y 35
+      setEstimatedTime(randomTime);
+      setIsCalculatingTime(false);
+    }, 3000); // Simular cálculo durante 3 segundos
+
+    return () => clearTimeout(timer); // Limpiar el temporizador al desmontar
+  }, []);
 
   const handleRequestService = () => {
     if (!user.available) {
@@ -72,7 +86,7 @@ const UserDetails = ({ user, onClose, recommendations, onSelectRecommended }) =>
           <h4 className="text-success">¡Solicitud exitosa! 🎉</h4>
           <p>
             Su <strong>{user.profession}</strong> {user.name} llegará a{" "}
-            <strong>{address}</strong> en aproximadamente{" "}
+            <strong>{userAddress}</strong> en aproximadamente{" "}
             <strong>{estimatedTime} minutos</strong>. ¡Gracias por confiar en
             nosotros!
           </p>
@@ -176,10 +190,15 @@ const UserDetails = ({ user, onClose, recommendations, onSelectRecommended }) =>
             <strong>Experiencia:</strong> {user.experience}
           </p>
           <p>
-            <strong>Tiempo estimado de llegada:</strong> {estimatedTime} minutos
+            <strong>Tiempo estimado de llegada:</strong>{" "}
+            {isCalculatingTime ? (
+              <span className="text-muted">Calculando...</span>
+            ) : (
+              `${estimatedTime} minutos`
+            )}
           </p>
           <p>
-            <strong>Dirección:</strong> {address}
+            <strong>Dirección:</strong> {userAddress}
           </p>
 
           {!showPaymentOptions && !serviceRequested && (

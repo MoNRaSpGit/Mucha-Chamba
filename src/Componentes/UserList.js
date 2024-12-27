@@ -21,56 +21,52 @@ const UserList = () => {
     { id: 13, name: "Maria", profession: "Plomero", available: false, age: 29, experiencia: "+5 años" },
   ];
 
-  const handleSelectRecommended = (rec) => {
-    setSelectedUser(rec);
-  };
-
   const navigate = useNavigate();
 
   useEffect(() => {
     const authState = localStorage.getItem("isAuthenticated");
     if (authState !== "true") {
-      navigate("/", { replace: true }); // Redirigir al login si no está autenticado
+      navigate("/", { replace: true });
     }
   }, [navigate]);
 
-  const handleLogout = () => {
-    localStorage.setItem("isAuthenticated", "false");
-    navigate("/", { replace: true }); // Redirigir al login al cerrar sesión
-  };
-
-  const [filterAvailable, setFilterAvailable] = useState(null);
+  const [filterAvailable, setFilterAvailable] = useState(null); // Estado para los filtros
+  const [isPremiumMode, setIsPremiumMode] = useState(false); // Estado del modo Premium
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedUser, setSelectedUser] = useState(null);
 
   const detailsRef = useRef(null);
 
+  const handlePremiumToggle = () => {
+    setIsPremiumMode(!isPremiumMode);
+    console.log("Modo Premium activado:", !isPremiumMode);
+  };
+
   const handleSelectUser = (user) => {
     setSelectedUser(user);
-
-    const selectedProfession = user.profession.toLowerCase().trim();
-    const filteredRecommendations = users.filter((rec) => {
-      const recProfession = rec.profession.toLowerCase().trim();
-      const isSameProfession = recProfession.includes(selectedProfession);
-      const isAvailable = rec.available;
-      const isNotSameUser = rec.id !== user.id;
-
-      return isSameProfession && isAvailable && isNotSameUser;
-    });
-
-    localStorage.setItem("recommendations", JSON.stringify(filteredRecommendations));
-
+    console.log("Usuario seleccionado:", user);
     setTimeout(() => {
       detailsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     }, 100);
   };
 
+  // Filtrar usuarios según disponibilidad o búsqueda
   const filteredUsers = users
     .filter((user) => (filterAvailable === null ? true : user.available === filterAvailable))
     .filter((user) => user.profession.toLowerCase().includes(searchTerm.toLowerCase()));
 
   return (
     <div className="container mt-3">
+      {/* Botón Premium */}
+      <div className="text-center mb-3">
+        <button
+          className={`btn ${isPremiumMode ? "btn-danger" : "btn-primary"}`}
+          onClick={handlePremiumToggle}
+        >
+          {isPremiumMode ? "Salir de Modo Premium" : "Modo Premium"}
+        </button>
+      </div>
+
       {/* Filtros */}
       <div className="row mb-3">
         <div className="col-12 col-md-4 mb-2">
@@ -118,7 +114,12 @@ const UserList = () => {
           filteredUsers.map((user) => (
             <div className="col-12 col-sm-6 col-lg-4 mb-3" key={user.id}>
               <div onClick={() => handleSelectUser(user)} style={{ cursor: "pointer" }}>
-                <UserItem id={user.id} name={user.name} profession={user.profession} available={user.available} />
+                <UserItem
+                  id={user.id}
+                  name={user.name}
+                  profession={user.profession}
+                  available={user.available}
+                />
               </div>
             </div>
           ))
@@ -133,15 +134,13 @@ const UserList = () => {
           <UserDetails
             user={selectedUser}
             onClose={() => setSelectedUser(null)}
-            recommendations={JSON.parse(localStorage.getItem("recommendations") || "[]")}
-            onSelectRecommended={handleSelectRecommended}
           />
         </div>
       )}
 
       {/* Botón de Cerrar Sesión */}
       <div className="text-center mt-4">
-        <button className="logout-button" onClick={handleLogout}>
+        <button className="logout-button" onClick={() => console.log("Cerrando sesión")}>
           Cerrar Sesión
         </button>
       </div>

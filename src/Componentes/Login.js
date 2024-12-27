@@ -1,72 +1,67 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "../Css/login.css"
+import { useDispatch } from "react-redux";
+import { setUser } from "../Slice/userSlice"; // Importar acción para guardar usuario registrado
+import "../Css/login.css";
+import Register from "./Register"; // Importar el componente de registro
 
 const Login = ({ onAuthenticate }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("Preparando inicio de sesión...");
-  const [countdown, setCountdown] = useState(10); // Máximo tiempo estimado
-  const [isLoading, setIsLoading] = useState(false); // Indicador de carga
+  const [message, setMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [showRegister, setShowRegister] = useState(false); // Estado para alternar entre login y registro
+
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  // Generar credenciales aleatorias
-  const generateRandomCredentials = () => {
-    const randomUsername = `user${Math.random().toString(36).substring(2, 8)}`;
-    const randomPassword = Math.random().toString(36).substring(2, 10);
-    setUsername(randomUsername);
-    setPassword(randomPassword);
-  };
+  // URLs para backend
+  const LOCAL_URL = "http://localhost:3001";
+ //const SERVER_URL = "https://chamba-back.onrender.com";
 
-  // Manejo del registro automático
-  const handleRegisterAndNavigate = async () => {
-    setIsLoading(true); // Inicia indicador de carga
+  // Cambiar entre local y servidor según necesidad
+  const BACKEND_URL = LOCAL_URL;
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setMessage(""); // Limpiar mensajes anteriores
+    setIsLoading(true);
+
     try {
-      const registerResponse = await fetch(
-        "https://chamba-back.onrender.com/register",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username, email: username, password }),
-        }
-      );
+      const response = await fetch(`${BACKEND_URL}/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+      });
 
-      if (registerResponse.ok) {
-        setMessage("Usuario registrado automáticamente. ¡Bienvenido!");
+      const data = await response.json();
+
+      if (response.ok) {
+        setMessage("Inicio de sesión exitoso");
+
+        // Guardar usuario en el store global
+        dispatch(setUser(data.user));
         localStorage.setItem("isAuthenticated", "true");
-        onAuthenticate();
-        setTimeout(() => navigate("/home"), 1000); // Navegar después de un breve tiempo
+        localStorage.setItem("user", JSON.stringify(data.user)); // Guardar datos en localStorage
+        onAuthenticate(); // Actualizar estado global de autenticación
+        navigate("/home"); // Redirigir al home
       } else {
-        const errorData = await registerResponse.json();
-        setMessage(errorData.error || "Error al registrar usuario.");
-        setIsLoading(false); // Detener carga si hay error
+        setMessage(data.error || "Error al iniciar sesión");
       }
     } catch (error) {
-      console.error("Error:", error);
-      setMessage("Error en el servidor.");
-      setIsLoading(false); // Detener carga si hay error
+      console.error("Error al conectar con el servidor:", error);
+      setMessage("Error al conectar con el servidor");
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  // Controlar el tiempo estimado
-  useEffect(() => {
-    if (isLoading && countdown > 0) {
-      const timer = setInterval(() => {
-        setCountdown((prev) => prev - 1);
-      }, 1000);
-
-      return () => clearInterval(timer); // Limpiar intervalo
-    } else if (countdown === 0 && isLoading) {
-      setMessage("Esto puede tardar un poco más...");
-    }
-  }, [isLoading, countdown]);
-
-  // Generar credenciales al montar el componente
-  useEffect(() => {
-    generateRandomCredentials();
-  }, []);
-
-  return (
+  return showRegister ? (
+    // Mostrar el componente Register si showRegister es true
+    <Register onSwitchToLogin={() => setShowRegister(false)} />
+  ) : (
     <div
       style={{
         backgroundColor: "#f3f4f6",
@@ -88,14 +83,14 @@ const Login = ({ onAuthenticate }) => {
         }}
       >
         <h2 style={{ color: "#333", fontSize: "24px", marginBottom: "20px" }}>
-          Registro Automático
+          Iniciar Sesión
         </h2>
-        <form>
+        <form onSubmit={handleLogin}>
           <input
             type="text"
             value={username}
-            readOnly
-            placeholder="Usuario"
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder="Nombre de usuario"
             style={{
               width: "100%",
               padding: "10px",
@@ -104,11 +99,12 @@ const Login = ({ onAuthenticate }) => {
               borderRadius: "5px",
               fontSize: "16px",
             }}
+            required
           />
           <input
             type="password"
             value={password}
-            readOnly
+            onChange={(e) => setPassword(e.target.value)}
             placeholder="Contraseña"
             style={{
               width: "100%",
@@ -118,52 +114,38 @@ const Login = ({ onAuthenticate }) => {
               borderRadius: "5px",
               fontSize: "16px",
             }}
+            required
           />
-          {!isLoading ? (
-            <button
-              type="button"
-              onClick={handleRegisterAndNavigate}
-              style={{
-                backgroundColor: "#007bff",
-                color: "white",
-                border: "none",
-                padding: "10px 20px",
-                fontSize: "16px",
-                cursor: "pointer",
-                borderRadius: "5px",
-                transition: "background-color 0.3s ease",
-              }}
-            >
-              Iniciar Sesión
-            </button>
-          ) : (
-            <div>
-              <div
-                style={{
-                  margin: "20px auto",
-                  border: "5px solid #f3f3f3",
-                  borderRadius: "50%",
-                  borderTop: "5px solid #007bff",
-                  width: "50px",
-                  height: "50px",
-                  animation: "spin 1s linear infinite",
-                }}
-              ></div>
-              <p
-                style={{
-                  marginTop: "15px",
-                  fontSize: "16px",
-                  color: "#007bff",
-                  fontWeight: "bold",
-                }}
-              >
-                Esta cuenta se logueará en {countdown} segundos...
-              </p>
-            </div>
-          )}
+          <button
+            type="submit"
+            style={{
+              backgroundColor: isLoading ? "#ccc" : "#007bff",
+              color: "white",
+              border: "none",
+              padding: "10px 20px",
+              fontSize: "16px",
+              cursor: isLoading ? "not-allowed" : "pointer",
+              borderRadius: "5px",
+              transition: "background-color 0.3s ease",
+            }}
+            disabled={isLoading}
+          >
+            {isLoading ? "Cargando..." : "Iniciar Sesión"}
+          </button>
         </form>
-        <p style={{ marginTop: "15px", fontSize: "14px", color: "green" }}>
+        <p style={{ marginTop: "15px", fontSize: "14px", color: "red" }}>
           {message}
+        </p>
+        <p
+          style={{
+            marginTop: "15px",
+            fontSize: "14px",
+            color: "#007bff",
+            cursor: "pointer",
+          }}
+          onClick={() => setShowRegister(true)} // Mostrar registro al hacer clic
+        >
+          ¿No tienes cuenta? <strong>Regístrate aquí</strong>
         </p>
       </div>
     </div>

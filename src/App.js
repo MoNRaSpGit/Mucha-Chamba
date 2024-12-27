@@ -20,41 +20,42 @@ const App = () => {
   };
 
   return (
-    <div>
-      {/* Encabezado */}
-      <header className="header-container">
-        <div className="header-content">
-          <h1 className="header-title">Chamba Ya!!!</h1>
-          <NotificationBell />
-        </div>
-      </header>
+    <Routes>
+      {/* Página de login */}
+      <Route
+        path="/"
+        element={
+          <main className="container mt-4">
+            <Login onAuthenticate={() => setIsAuthenticated(true)} />
+          </main>
+        }
+      />
 
-      {/* Contenido principal */}
-      <main className="container mt-4">
-        <Routes>
-          {/* Página de login */}
-          <Route
-            path="/"
-            element={<Login onAuthenticate={() => setIsAuthenticated(true)} />}
-          />
-
-          {/* Página principal (UserList) */}
-          <Route
-            path="/home"
-            element={
-              isAuthenticated ? (
+      {/* Página principal con encabezado */}
+      <Route
+        path="/home"
+        element={
+          isAuthenticated ? (
+            <>
+              <header className="header-container">
+                <div className="header-content">
+                  <h1 className="header-title">Chamba Ya!!!</h1>
+                  <NotificationBell />
+                </div>
+              </header>
+              <main className="container mt-4">
                 <UserList onLogout={handleLogout} />
-              ) : (
-                <Navigate to="/" replace />
-              )
-            }
-          />
+              </main>
+            </>
+          ) : (
+            <Navigate to="/" replace />
+          )
+        }
+      />
 
-          {/* Redirección para rutas no definidas */}
-          <Route path="*" element={<Navigate to="/" />} />
-        </Routes>
-      </main>
-    </div>
+      {/* Redirección para rutas no definidas */}
+      <Route path="*" element={<Navigate to="/" />} />
+    </Routes>
   );
 };
 
