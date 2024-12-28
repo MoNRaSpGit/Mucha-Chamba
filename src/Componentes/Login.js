@@ -16,11 +16,11 @@ const Login = ({ onAuthenticate }) => {
   const dispatch = useDispatch();
 
   // URLs para backend
-  const LOCAL_URL = "http://localhost:3001";
- //const SERVER_URL = "https://chamba-back.onrender.com";
+ // const LOCAL_URL = "http://localhost:3001";
+ const SERVER_URL = "https://chamba-back.onrender.com";
 
   // Cambiar entre local y servidor según necesidad
-  const BACKEND_URL = LOCAL_URL;
+  //const BACKEND_URL = LOCAL_URL;
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -28,7 +28,7 @@ const Login = ({ onAuthenticate }) => {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`${BACKEND_URL}/login`, {
+      const response = await fetch(`${SERVER_URL}/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

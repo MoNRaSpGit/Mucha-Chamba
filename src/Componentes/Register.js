@@ -14,16 +14,16 @@ const Register = ({ onSwitchToLogin }) => {
 
   const dispatch = useDispatch();
 
-  const LOCAL_URL = "http://localhost:3001";
-  //const SERVER_URL = "https://chamba-back.onrender.com";
-  const BACKEND_URL = LOCAL_URL;
+  //const LOCAL_URL = "http://localhost:3001";
+  const SERVER_URL = "https://chamba-back.onrender.com";
+  //const BACKEND_URL = LOCAL_URL;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage("");
 
     try {
-      const response = await fetch(`${BACKEND_URL}/register`, {
+      const response = await fetch(`${SERVER_URL}/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
