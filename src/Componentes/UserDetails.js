@@ -52,11 +52,13 @@ const UserDetails = ({ user, onClose, recommendations, onSelectRecommended }) =>
 
   const handleRequestService = () => {
     if (!user.available) {
-      setServiceRequested(true); // Si no está disponible, activar sugerencias
+      // Mostrar el mensaje cuando el trabajador no está disponible
+      alert(`El ${user.profession} ${user.name} no está disponible. Disculpe las molestias.`);
     } else {
       setShowPaymentOptions(true); // Mostrar opciones de pago si está disponible
     }
   };
+  
 
   const handlePaymentMethod = (method) => {
     setPaymentMethod(method);
