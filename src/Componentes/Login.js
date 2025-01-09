@@ -20,8 +20,8 @@ const Login = ({ onAuthenticate }) => {
   const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    setCountdown(10); // Inicializa el contador cada vez que se inicia sesión
-
+    setCountdown(10); // Inicializa el contador
+  
     try {
       const response = await fetch(`${SERVER_URL}/login`, {
         method: "POST",
@@ -30,29 +30,28 @@ const Login = ({ onAuthenticate }) => {
         },
         body: JSON.stringify({ username, password }),
       });
-
+  
       const data = await response.json();
-
+  
       if (response.ok) {
         // Guardar usuario en el store global
         dispatch(setUser(data.user));
         localStorage.setItem("isAuthenticated", "true");
         localStorage.setItem("user", JSON.stringify(data.user)); // Guardar datos en localStorage
         onAuthenticate(); // Actualizar estado global de autenticación
-
-        // Simula el retraso para mostrar el contador y el círculo giratorio
-        setTimeout(() => {
-          navigate("/home"); // Redirigir al home después de 10 segundos
-        }, 10000);
+  
+        // Navegar y luego detener el spinner
+        navigate("/home", { replace: true });
       } else {
         console.error(data.error || "Error al iniciar sesión");
       }
     } catch (error) {
       console.error("Error al conectar con el servidor:", error);
     } finally {
-      setIsLoading(false);
+      setIsLoading(false); // Mover aquí para asegurar que todo haya terminado
     }
   };
+  
 
   useEffect(() => {
     if (isLoading && countdown > 0) {
