@@ -8,7 +8,6 @@ import Register from "./Register"; // Importar el componente de registro
 const Login = ({ onAuthenticate }) => {
   const [username, setUsername] = useState("pepe");
   const [password, setPassword] = useState("123");
-  const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [countdown, setCountdown] = useState(10); // Estado para el contador regresivo
   const [showRegister, setShowRegister] = useState(false); // Estado para alternar entre login y registro
@@ -16,12 +15,10 @@ const Login = ({ onAuthenticate }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  // URLs para backend
   const SERVER_URL = "https://chamba-back.onrender.com";
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setMessage(""); // Limpiar mensajes anteriores
     setIsLoading(true);
     setCountdown(10); // Inicializa el contador cada vez que se inicia sesión
 
@@ -37,8 +34,6 @@ const Login = ({ onAuthenticate }) => {
       const data = await response.json();
 
       if (response.ok) {
-        setMessage("Inicio de sesión exitoso");
-
         // Guardar usuario en el store global
         dispatch(setUser(data.user));
         localStorage.setItem("isAuthenticated", "true");
@@ -50,17 +45,15 @@ const Login = ({ onAuthenticate }) => {
           navigate("/home"); // Redirigir al home después de 10 segundos
         }, 10000);
       } else {
-        setMessage(data.error || "Error al iniciar sesión");
+        console.error(data.error || "Error al iniciar sesión");
       }
     } catch (error) {
       console.error("Error al conectar con el servidor:", error);
-      setMessage("Error al conectar con el servidor");
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Manejador del contador regresivo
   useEffect(() => {
     if (isLoading && countdown > 0) {
       const timer = setTimeout(() => {
@@ -164,9 +157,6 @@ const Login = ({ onAuthenticate }) => {
             </button>
           </form>
         )}
-        <p style={{ marginTop: "15px", fontSize: "14px", color: "red" }}>
-          {message}
-        </p>
         <p
           style={{
             marginTop: "15px",

@@ -9,7 +9,7 @@ const UserList = () => {
     { id: 1, name: "Ramon", profession: "Carpintero", available: false, age: 25, experience: "+10 años" },
     { id: 2, name: "Stven", profession: "Pintor", available: true, age: 35, experience: "+25 años" },
     { id: 3, name: "Victor", profession: "Electricista", available: true, age: 35, experience: "+15 años" },
-    { id: 4, name: "Aco", profession: "Plomero", available: true, age: 42, experience: "+25 años" },
+    { id: 4, name: "Juan", profession: "Plomero", available: true, age: 42, experience: "+25 años" },
     { id: 5, name: "Carlos", profession: "Peluquero", available: true, age: 45, experience: "+20 años" },
     { id: 6, name: "Ana", profession: "Peluquera", available: false, age: 33, experience: "+12 años" },
     { id: 7, name: "Luis", profession: "Carpintero", available: true, age: 50, experience: "+25 años" },
