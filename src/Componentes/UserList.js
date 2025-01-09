@@ -6,10 +6,10 @@ import { useNavigate } from "react-router-dom";
 
 const UserList = () => {
   const users = [
-    { id: 1, name: "MoNRa", profession: "Ing.Nuclear", available: false, age: 25, experience: "+10 años" },
-    { id: 2, name: "Stven", profession: "Narco", available: true, age: 15, experience: "+25 años" },
-    { id: 3, name: "Victor", profession: "Manco", available: true, age: 126, experience: "+15 años" },
-    { id: 4, name: "Aco", profession: "Bufanda", available: true, age: 42, experience: "+25 años" },
+    { id: 1, name: "Ramon", profession: "Carpintero", available: false, age: 25, experience: "+10 años" },
+    { id: 2, name: "Stven", profession: "Pintor", available: true, age: 35, experience: "+25 años" },
+    { id: 3, name: "Victor", profession: "Electricista", available: true, age: 35, experience: "+15 años" },
+    { id: 4, name: "Aco", profession: "Plomero", available: true, age: 42, experience: "+25 años" },
     { id: 5, name: "Carlos", profession: "Peluquero", available: true, age: 45, experience: "+20 años" },
     { id: 6, name: "Ana", profession: "Peluquera", available: false, age: 33, experience: "+12 años" },
     { id: 7, name: "Luis", profession: "Carpintero", available: true, age: 50, experience: "+25 años" },

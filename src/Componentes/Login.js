@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setUser } from "../Slice/userSlice"; // Importar acción para guardar usuario registrado
@@ -6,26 +6,24 @@ import "../Css/login.css";
 import Register from "./Register"; // Importar el componente de registro
 
 const Login = ({ onAuthenticate }) => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("pepe");
+  const [password, setPassword] = useState("123");
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [countdown, setCountdown] = useState(10); // Estado para el contador regresivo
   const [showRegister, setShowRegister] = useState(false); // Estado para alternar entre login y registro
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   // URLs para backend
- // const LOCAL_URL = "http://localhost:3001";
- const SERVER_URL = "https://chamba-back.onrender.com";
-
-  // Cambiar entre local y servidor según necesidad
-  //const BACKEND_URL = LOCAL_URL;
+  const SERVER_URL = "https://chamba-back.onrender.com";
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setMessage(""); // Limpiar mensajes anteriores
     setIsLoading(true);
+    setCountdown(10); // Inicializa el contador cada vez que se inicia sesión
 
     try {
       const response = await fetch(`${SERVER_URL}/login`, {
@@ -46,7 +44,11 @@ const Login = ({ onAuthenticate }) => {
         localStorage.setItem("isAuthenticated", "true");
         localStorage.setItem("user", JSON.stringify(data.user)); // Guardar datos en localStorage
         onAuthenticate(); // Actualizar estado global de autenticación
-        navigate("/home"); // Redirigir al home
+
+        // Simula el retraso para mostrar el contador y el círculo giratorio
+        setTimeout(() => {
+          navigate("/home"); // Redirigir al home después de 10 segundos
+        }, 10000);
       } else {
         setMessage(data.error || "Error al iniciar sesión");
       }
@@ -57,6 +59,16 @@ const Login = ({ onAuthenticate }) => {
       setIsLoading(false);
     }
   };
+
+  // Manejador del contador regresivo
+  useEffect(() => {
+    if (isLoading && countdown > 0) {
+      const timer = setTimeout(() => {
+        setCountdown((prevCountdown) => prevCountdown - 1);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [isLoading, countdown]);
 
   return showRegister ? (
     // Mostrar el componente Register si showRegister es true
@@ -85,54 +97,73 @@ const Login = ({ onAuthenticate }) => {
         <h2 style={{ color: "#333", fontSize: "24px", marginBottom: "20px" }}>
           Iniciar Sesión
         </h2>
-        <form onSubmit={handleLogin}>
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            placeholder="Nombre de usuario"
-            style={{
-              width: "100%",
-              padding: "10px",
-              marginBottom: "15px",
-              border: "1px solid #ccc",
-              borderRadius: "5px",
-              fontSize: "16px",
-            }}
-            required
-          />
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Contraseña"
-            style={{
-              width: "100%",
-              padding: "10px",
-              marginBottom: "15px",
-              border: "1px solid #ccc",
-              borderRadius: "5px",
-              fontSize: "16px",
-            }}
-            required
-          />
-          <button
-            type="submit"
-            style={{
-              backgroundColor: isLoading ? "#ccc" : "#007bff",
-              color: "white",
-              border: "none",
-              padding: "10px 20px",
-              fontSize: "16px",
-              cursor: isLoading ? "not-allowed" : "pointer",
-              borderRadius: "5px",
-              transition: "background-color 0.3s ease",
-            }}
-            disabled={isLoading}
-          >
-            {isLoading ? "Cargando..." : "Iniciar Sesión"}
-          </button>
-        </form>
+        {isLoading ? (
+          <div style={{ textAlign: "center" }}>
+            <div
+              style={{
+                border: "4px solid #f3f3f3",
+                borderTop: "4px solid #007bff",
+                borderRadius: "50%",
+                width: "40px",
+                height: "40px",
+                margin: "20px auto",
+                animation: "spin 1s linear infinite",
+              }}
+            ></div>
+            <p style={{ marginTop: "15px", fontSize: "16px" }}>
+              Esta página se redirigirá en {countdown} segundos...
+            </p>
+          </div>
+        ) : (
+          <form onSubmit={handleLogin}>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Nombre de usuario"
+              style={{
+                width: "100%",
+                padding: "10px",
+                marginBottom: "15px",
+                border: "1px solid #ccc",
+                borderRadius: "5px",
+                fontSize: "16px",
+              }}
+              required
+            />
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Contraseña"
+              style={{
+                width: "100%",
+                padding: "10px",
+                marginBottom: "15px",
+                border: "1px solid #ccc",
+                borderRadius: "5px",
+                fontSize: "16px",
+              }}
+              required
+            />
+            <button
+              type="submit"
+              style={{
+                backgroundColor: isLoading ? "#ccc" : "#007bff",
+                color: "white",
+                border: "none",
+                padding: "10px 20px",
+                fontSize: "16px",
+                cursor: isLoading ? "not-allowed" : "pointer",
+                borderRadius: "5px",
+                transition: "background-color 0.3s ease",
+              }}
+              disabled={isLoading}
+            >
+              {isLoading ? "Cargando..." : "Iniciar Sesión"}
+            </button>
+          </form>
+        )}
         <p style={{ marginTop: "15px", fontSize: "14px", color: "red" }}>
           {message}
         </p>
